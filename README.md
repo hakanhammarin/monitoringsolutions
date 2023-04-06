@@ -1,4 +1,4 @@
 # monitoringsolutions
 Simple monitoring from CSV-file
 
-![simple_monitoring](https://user-images.githubusercontent.com/6259327/230477910-7b27a9bb-da7b-41c8-8c76-0fc46f9d9303.png)
+![simple_monitoring](https://user-images.githubusercontent.com/6259327/230480138-dada9643-f53f-4fa3-96d1-40e9bb8b8b79.png)
