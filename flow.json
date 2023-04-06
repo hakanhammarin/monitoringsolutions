@@ -1,0 +1,545 @@
+[
+    {
+        "id": "9f11b6f3645509cd",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3be8e943e689619b",
+        "type": "ui_table",
+        "z": "9f11b6f3645509cd",
+        "group": "3309b7360722214e",
+        "name": "",
+        "order": 2,
+        "width": 10,
+        "height": 18,
+        "columns": [
+            {
+                "field": "name",
+                "title": "Host",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "host",
+                "title": "IP",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "time",
+                "title": "Time",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "response",
+                "title": "Response",
+                "width": "",
+                "align": "left",
+                "formatter": "traffic",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "status",
+                "title": "Status",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 921,
+        "y": 242,
+        "wires": [],
+        "l": false
+    },
+    {
+        "id": "25a2ff826c05cf52",
+        "type": "inject",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"name\":\"A\",\"host\":\"10.0.0.1\"},{\"name\":\"B\",\"host\":\"10.0.0.40\"},{\"name\":\"C\",\"host\":\"10.0.0.99\"}]",
+        "payloadType": "json",
+        "x": 138,
+        "y": 162,
+        "wires": [
+            [
+                "49dae4f82ae9e019"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "10dbb00d04aadbbe",
+        "type": "ping",
+        "z": "9f11b6f3645509cd",
+        "protocol": "IPv4",
+        "mode": "triggered",
+        "name": "",
+        "host": "",
+        "timer": "20",
+        "inputs": 1,
+        "x": 285,
+        "y": 245,
+        "wires": [
+            [
+                "32da3003d7b03bed",
+                "039548773adfb5c9"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "ab488947a355c07a",
+        "type": "join",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "10",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 795,
+        "y": 243,
+        "wires": [
+            [
+                "3be8e943e689619b"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "df1e884ccaac2c46",
+        "type": "change",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\t    \"name\": msg.ping.name,\t    \"host\": msg.ping.host,\t    \"response\": msg.payload,\t    \"time\": msg.time,\t    \"status\": msg.up\t}",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 674,
+        "y": 243,
+        "wires": [
+            [
+                "ab488947a355c07a"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "195fb956e28cd54c",
+        "type": "range",
+        "z": "9f11b6f3645509cd",
+        "minin": "0",
+        "maxin": "100",
+        "minout": "100",
+        "maxout": "0",
+        "action": "scale",
+        "round": true,
+        "property": "payload",
+        "name": "",
+        "x": 608,
+        "y": 243,
+        "wires": [
+            [
+                "df1e884ccaac2c46"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "ed79e6fd536dac89",
+        "type": "change",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "time",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "false",
+                "fromt": "bool",
+                "to": "100",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 525,
+        "y": 243,
+        "wires": [
+            [
+                "195fb956e28cd54c"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "32da3003d7b03bed",
+        "type": "ui_chart",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "group": "3309b7360722214e",
+        "order": 3,
+        "width": 10,
+        "height": 6,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 923,
+        "y": 376,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "49dae4f82ae9e019",
+        "type": "file in",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "filename": "/tmp/nodes.csv",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 262,
+        "y": 163,
+        "wires": [
+            [
+                "0709b5faed53f185"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "7276c9d7f3966b85",
+        "type": "ui_upload_mf",
+        "z": "9f11b6f3645509cd",
+        "group": "3309b7360722214e",
+        "title": "Upload CSV file (name,host)",
+        "name": "Upload",
+        "order": 1,
+        "width": 10,
+        "height": 1,
+        "chunk": 256,
+        "transfer": "text",
+        "x": 169,
+        "y": 497,
+        "wires": [
+            [
+                "b21010a9c137728f"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "b21010a9c137728f",
+        "type": "file",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "filename": "/tmp/nodes.csv",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "utf8",
+        "x": 337,
+        "y": 493,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "0709b5faed53f185",
+        "type": "csv",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 360,
+        "y": 160,
+        "wires": [
+            [
+                "10dbb00d04aadbbe"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "428a3964b10e92b6",
+        "type": "inject",
+        "z": "9f11b6f3645509cd",
+        "name": "Reset",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "x": 817,
+        "y": 308,
+        "wires": [
+            [
+                "3be8e943e689619b",
+                "32da3003d7b03bed"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "039548773adfb5c9",
+        "type": "function",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "func": "if(msg.payload === false) {msg.up = \"DOWN\"}\nelse {msg.up = \"UP\"}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 426,
+        "y": 244,
+        "wires": [
+            [
+                "ed79e6fd536dac89"
+            ]
+        ]
+    },
+    {
+        "id": "fe57be5dac90a2d9",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 4,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "132ce957c26c2630",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 5,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "78a710859cc0a7ba",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 6,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "75ba74d73a461b4e",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 7,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "af27651017c6f96c",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 8,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "2a5706c997c49a66",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 9,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "a17d05c83eb3dd7c",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 10,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "61ad7e2ab55e46a7",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 11,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "764c2d2ca9cd8e14",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 12,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "8574dc5398834a9c",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 13,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "99c0814fd2b2ffc3",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 14,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "3309b7360722214e",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "9a1c955649d0e73b",
+        "order": 1,
+        "disp": true,
+        "width": "20",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9a1c955649d0e73b",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
