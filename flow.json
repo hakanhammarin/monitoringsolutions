@@ -18,6 +18,16 @@
         "height": 18,
         "columns": [
             {
+                "field": "id",
+                "title": "Id",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
                 "field": "name",
                 "title": "Host",
                 "width": "",
@@ -70,8 +80,8 @@
         ],
         "outputs": 0,
         "cts": false,
-        "x": 921,
-        "y": 242,
+        "x": 1379,
+        "y": 150,
         "wires": [],
         "l": false
     },
@@ -115,8 +125,8 @@
         "host": "",
         "timer": "20",
         "inputs": 1,
-        "x": 285,
-        "y": 245,
+        "x": 553,
+        "y": 157,
         "wires": [
             [
                 "32da3003d7b03bed",
@@ -145,12 +155,10 @@
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 795,
-        "y": 243,
+        "x": 1148,
+        "y": 97,
         "wires": [
-            [
-                "3be8e943e689619b"
-            ]
+            []
         ],
         "l": false
     },
@@ -164,7 +172,7 @@
                 "t": "set",
                 "p": "payload",
                 "pt": "msg",
-                "to": "{\t    \"name\": msg.ping.name,\t    \"host\": msg.ping.host,\t    \"response\": msg.payload,\t    \"time\": msg.time,\t    \"status\": msg.up\t}",
+                "to": "{\t   \"command\": \"updateOrAddRow\",\t   \"arguments\": [\t       ping.id,\t       {\t   \"id\": ping.id,\t   \"name\": ping.name,\t   \"host\": ping.host,\t   \"response\": payload,\t   \"time\": time,\t   \"status\": up\t},\t       \"true\"\t    ],\t   \"returnPromise\": \"true\"\t}\t\t",
                 "tot": "jsonata"
             }
         ],
@@ -173,11 +181,13 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 674,
-        "y": 243,
+        "x": 1084,
+        "y": 154,
         "wires": [
             [
-                "ab488947a355c07a"
+                "ab488947a355c07a",
+                "3be8e943e689619b",
+                "a5ee5ca45e9cf840"
             ]
         ],
         "l": false
@@ -194,8 +204,8 @@
         "round": true,
         "property": "payload",
         "name": "",
-        "x": 608,
-        "y": 243,
+        "x": 951,
+        "y": 155,
         "wires": [
             [
                 "df1e884ccaac2c46"
@@ -231,8 +241,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 525,
-        "y": 243,
+        "x": 868,
+        "y": 155,
         "wires": [
             [
                 "195fb956e28cd54c"
@@ -278,8 +288,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 923,
-        "y": 376,
+        "x": 1266,
+        "y": 288,
         "wires": [
             []
         ],
@@ -306,27 +316,6 @@
         "l": false
     },
     {
-        "id": "7276c9d7f3966b85",
-        "type": "ui_upload_mf",
-        "z": "9f11b6f3645509cd",
-        "group": "3309b7360722214e",
-        "title": "Upload CSV file (name,host)",
-        "name": "Upload",
-        "order": 1,
-        "width": 10,
-        "height": 1,
-        "chunk": 256,
-        "transfer": "text",
-        "x": 169,
-        "y": 497,
-        "wires": [
-            [
-                "b21010a9c137728f"
-            ]
-        ],
-        "l": false
-    },
-    {
         "id": "b21010a9c137728f",
         "type": "file",
         "z": "9f11b6f3645509cd",
@@ -339,7 +328,9 @@
         "x": 337,
         "y": 493,
         "wires": [
-            []
+            [
+                "49dae4f82ae9e019"
+            ]
         ],
         "l": false
     },
@@ -384,8 +375,8 @@
         "topic": "",
         "payload": "[]",
         "payloadType": "json",
-        "x": 817,
-        "y": 308,
+        "x": 1160,
+        "y": 220,
         "wires": [
             [
                 "3be8e943e689619b",
@@ -405,8 +396,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 426,
-        "y": 244,
+        "x": 738,
+        "y": 155,
         "wires": [
             [
                 "ed79e6fd536dac89"
@@ -414,7 +405,70 @@
         ]
     },
     {
-        "id": "fe57be5dac90a2d9",
+        "id": "a5ee5ca45e9cf840",
+        "type": "debug",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1368,
+        "y": 424,
+        "wires": []
+    },
+    {
+        "id": "3419eb577ad3f47d",
+        "type": "inject",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"command\":\"setSort\",\"arguments\":[[{\"column\":\"id\",\"dir\":\"asc\"},{\"column\":\"status\",\"dir\":\"asc\"}]]}",
+        "payloadType": "json",
+        "x": 1043,
+        "y": 335,
+        "wires": [
+            [
+                "3be8e943e689619b",
+                "a5ee5ca45e9cf840"
+            ]
+        ]
+    },
+    {
+        "id": "f7871c77b567415f",
+        "type": "ui_upload",
+        "z": "9f11b6f3645509cd",
+        "group": "3309b7360722214e",
+        "title": "upload",
+        "name": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "chunk": 256,
+        "transfer": "text",
+        "x": 263,
+        "y": 572,
+        "wires": [
+            [
+                "b21010a9c137728f"
+            ]
+        ]
+    },
+    {
+        "id": "b114b7dfa9d3ad16",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -424,7 +478,7 @@
         "height": 1
     },
     {
-        "id": "132ce957c26c2630",
+        "id": "ceb606553edf6761",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -434,7 +488,7 @@
         "height": 1
     },
     {
-        "id": "78a710859cc0a7ba",
+        "id": "dee06ec4d35e5750",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -444,7 +498,7 @@
         "height": 1
     },
     {
-        "id": "75ba74d73a461b4e",
+        "id": "c248b5cb8e5b7de3",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -454,7 +508,7 @@
         "height": 1
     },
     {
-        "id": "af27651017c6f96c",
+        "id": "06d379da3e2eef59",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -464,7 +518,7 @@
         "height": 1
     },
     {
-        "id": "2a5706c997c49a66",
+        "id": "10a663cd6de505a3",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -474,7 +528,7 @@
         "height": 1
     },
     {
-        "id": "a17d05c83eb3dd7c",
+        "id": "ddbf43bc24fc00e5",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -484,7 +538,7 @@
         "height": 1
     },
     {
-        "id": "61ad7e2ab55e46a7",
+        "id": "e5b7e6150ceefa50",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -494,7 +548,7 @@
         "height": 1
     },
     {
-        "id": "764c2d2ca9cd8e14",
+        "id": "c520eaf17161395c",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -504,7 +558,7 @@
         "height": 1
     },
     {
-        "id": "8574dc5398834a9c",
+        "id": "b88861282bb9e55a",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
@@ -514,12 +568,22 @@
         "height": 1
     },
     {
-        "id": "99c0814fd2b2ffc3",
+        "id": "4e0e73103481a929",
         "type": "ui_spacer",
         "z": "9f11b6f3645509cd",
         "name": "spacer",
         "group": "3309b7360722214e",
         "order": 14,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "ef43c835eb2af01b",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 15,
         "width": 10,
         "height": 1
     },
