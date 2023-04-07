@@ -1,0 +1,781 @@
+[
+    {
+        "id": "9f11b6f3645509cd",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3be8e943e689619b",
+        "type": "ui_table",
+        "z": "9f11b6f3645509cd",
+        "group": "3309b7360722214e",
+        "name": "",
+        "order": 2,
+        "width": 20,
+        "height": 18,
+        "columns": [
+            {
+                "field": "id",
+                "title": "Id",
+                "width": "1",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "name",
+                "title": "Host",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "host",
+                "title": "IP",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "time",
+                "title": "Time",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "response",
+                "title": "Response",
+                "width": "",
+                "align": "left",
+                "formatter": "traffic",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "status",
+                "title": "Status",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "lastseen",
+                "title": "Last Seen",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 1591,
+        "y": 150,
+        "wires": [],
+        "l": false
+    },
+    {
+        "id": "25a2ff826c05cf52",
+        "type": "inject",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"name\":\"A\",\"host\":\"10.0.0.1\"},{\"name\":\"B\",\"host\":\"10.0.0.40\"},{\"name\":\"C\",\"host\":\"10.0.0.99\"}]",
+        "payloadType": "json",
+        "x": 138,
+        "y": 162,
+        "wires": [
+            [
+                "49dae4f82ae9e019"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "10dbb00d04aadbbe",
+        "type": "ping",
+        "z": "9f11b6f3645509cd",
+        "protocol": "IPv4",
+        "mode": "triggered",
+        "name": "",
+        "host": "",
+        "timer": "20",
+        "inputs": 1,
+        "x": 553,
+        "y": 157,
+        "wires": [
+            [
+                "039548773adfb5c9"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "df1e884ccaac2c46",
+        "type": "change",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\t   \"command\": \"updateOrAddRow\",\t   \"arguments\": [\t       ping.id,\t       {\t   \"id\": ping.id,\t   \"name\": ping.name,\t   \"host\": ping.host,\t   \"response\": payload,\t   \"time\": time,\t   \"status\": up,\t   \"lastseen\": lastseen\t},\t       \"true\"\t    ],\t   \"returnPromise\": \"true\"\t}\t\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1084,
+        "y": 154,
+        "wires": [
+            [
+                "4c8d34e8dfd22a4f",
+                "fed451e341a1ca6f"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "195fb956e28cd54c",
+        "type": "range",
+        "z": "9f11b6f3645509cd",
+        "minin": "0",
+        "maxin": "200",
+        "minout": "100",
+        "maxout": "0",
+        "action": "scale",
+        "round": true,
+        "property": "payload",
+        "name": "",
+        "x": 951,
+        "y": 155,
+        "wires": [
+            [
+                "df1e884ccaac2c46"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "ed79e6fd536dac89",
+        "type": "change",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "time",
+                "pt": "msg",
+                "to": "payload",
+                "tot": "msg"
+            },
+            {
+                "t": "change",
+                "p": "payload",
+                "pt": "msg",
+                "from": "false",
+                "fromt": "bool",
+                "to": "100",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 892,
+        "y": 157,
+        "wires": [
+            [
+                "195fb956e28cd54c"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "32da3003d7b03bed",
+        "type": "ui_chart",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "group": "3309b7360722214e",
+        "order": 3,
+        "width": 10,
+        "height": 13,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1661,
+        "y": 304,
+        "wires": [
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "49dae4f82ae9e019",
+        "type": "file in",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "filename": "/tmp/nodes.csv",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 262,
+        "y": 163,
+        "wires": [
+            [
+                "0709b5faed53f185"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "b21010a9c137728f",
+        "type": "file",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "filename": "/tmp/nodes.csv",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "utf8",
+        "x": 337,
+        "y": 493,
+        "wires": [
+            [
+                "49dae4f82ae9e019"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "0709b5faed53f185",
+        "type": "csv",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 360,
+        "y": 160,
+        "wires": [
+            [
+                "10dbb00d04aadbbe"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "428a3964b10e92b6",
+        "type": "inject",
+        "z": "9f11b6f3645509cd",
+        "name": "Reset",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "x": 1160,
+        "y": 220,
+        "wires": [
+            [
+                "3be8e943e689619b",
+                "32da3003d7b03bed"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "039548773adfb5c9",
+        "type": "function",
+        "z": "9f11b6f3645509cd",
+        "name": "set UP/DOWN and lastseen",
+        "func": "var lastseen = new Date()\nif(msg.payload === false) {msg.up = \"DOWN\", msg.payload = \"1000\"}\nelse {msg.up = \"UP\",\n    msg.lastseen = lastseen.toISOString()\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 707,
+        "y": 120,
+        "wires": [
+            [
+                "ed79e6fd536dac89"
+            ]
+        ]
+    },
+    {
+        "id": "a5ee5ca45e9cf840",
+        "type": "debug",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1743,
+        "y": 423,
+        "wires": []
+    },
+    {
+        "id": "3419eb577ad3f47d",
+        "type": "inject",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"command\":\"setSort\",\"arguments\":[[{\"column\":\"id\",\"dir\":\"asc\"},{\"column\":\"status\",\"dir\":\"asc\"}]]}",
+        "payloadType": "json",
+        "x": 1043,
+        "y": 335,
+        "wires": [
+            [
+                "3be8e943e689619b"
+            ]
+        ]
+    },
+    {
+        "id": "f7871c77b567415f",
+        "type": "ui_upload",
+        "z": "9f11b6f3645509cd",
+        "group": "3309b7360722214e",
+        "title": "upload",
+        "name": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "chunk": 256,
+        "transfer": "text",
+        "x": 171,
+        "y": 492,
+        "wires": [
+            [
+                "b21010a9c137728f"
+            ]
+        ]
+    },
+    {
+        "id": "99390888c18eb8d8",
+        "type": "function",
+        "z": "9f11b6f3645509cd",
+        "name": "send ip from subnet",
+        "func": "var ips = global.get('netmask').Netmask\nvar block = new ips('10.0.0.0/24');\nfunction ip2int(ip) {\n    return ip.split('.').reduce(function(ipInt, octet) { return (ipInt<<8) + parseInt(octet, 10)}, 0) >>> 0;\n}\n\narray=[];\nblock.forEach(function(ip, long, index)\n{console.log(ip);\nipint = ip2int(ip);\n\narray.push({\"host\":ip, \"id\":ipint, \"timeout\":\"1000\", \"new\":\"yes\"});\n}\n);\nmsg.payload = array\n// msg.payload = payload;\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "ips",
+                "module": "netmask"
+            }
+        ],
+        "x": 417,
+        "y": 659,
+        "wires": [
+            [
+                "10dbb00d04aadbbe"
+            ]
+        ]
+    },
+    {
+        "id": "26debeb2639c0a76",
+        "type": "debug",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1276,
+        "y": 652,
+        "wires": []
+    },
+    {
+        "id": "99c55521e9a8bcb6",
+        "type": "inject",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 151,
+        "y": 659,
+        "wires": [
+            [
+                "99390888c18eb8d8"
+            ]
+        ]
+    },
+    {
+        "id": "dea6a39061ea43f9",
+        "type": "change",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[{\t   \"id\": ping.id,\t   \"name\": ping.name,\t   \"host\": ping.host,\t   \t   \"timeout\": \"500\",\t  \t   \"lastseen\": lastseen\t}\t]",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 870,
+        "y": 411,
+        "wires": [
+            [
+                "6e46df9fd3c888e0",
+                "26debeb2639c0a76"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "4c8d34e8dfd22a4f",
+        "type": "switch",
+        "z": "9f11b6f3645509cd",
+        "name": "Forward w/ lastseen",
+        "property": "lastseen",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 710,
+        "y": 418,
+        "wires": [
+            [
+                "dea6a39061ea43f9"
+            ],
+            [
+                "2539d42caf9f8ce3"
+            ]
+        ]
+    },
+    {
+        "id": "6e46df9fd3c888e0",
+        "type": "delay",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "30",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 773,
+        "y": 629,
+        "wires": [
+            [
+                "10dbb00d04aadbbe"
+            ]
+        ]
+    },
+    {
+        "id": "fed451e341a1ca6f",
+        "type": "switch",
+        "z": "9f11b6f3645509cd",
+        "name": "Forward w/ lastseen",
+        "property": "lastseen",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1285,
+        "y": 127,
+        "wires": [
+            [
+                "3be8e943e689619b",
+                "fd2e798855a2850a"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "fd2e798855a2850a",
+        "type": "change",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "time",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1314,
+        "y": 347,
+        "wires": [
+            [
+                "a5ee5ca45e9cf840",
+                "32da3003d7b03bed"
+            ]
+        ]
+    },
+    {
+        "id": "be750461d330da3d",
+        "type": "delay",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "minutes",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1161,
+        "y": 487,
+        "wires": [
+            [
+                "10dbb00d04aadbbe"
+            ]
+        ]
+    },
+    {
+        "id": "2539d42caf9f8ce3",
+        "type": "change",
+        "z": "9f11b6f3645509cd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[{\t   \"id\": ping.id,\t   \"name\": ping.name,\t   \"host\": ping.host,\t   \t   \"timeout\": \"500\",\t  \t   \"lastseen\": lastseen\t}\t]",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 982,
+        "y": 491,
+        "wires": [
+            [
+                "be750461d330da3d"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "92bc7101f51e8fe6",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 4,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "8901b01221e496c2",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 5,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "e76d8879ed5fb3a4",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 6,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "5c4c2732deba565c",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 7,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "6fcb83fb4a08e303",
+        "type": "ui_spacer",
+        "z": "9f11b6f3645509cd",
+        "name": "spacer",
+        "group": "3309b7360722214e",
+        "order": 8,
+        "width": 10,
+        "height": 1
+    },
+    {
+        "id": "3309b7360722214e",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "9a1c955649d0e73b",
+        "order": 1,
+        "disp": true,
+        "width": 30,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9a1c955649d0e73b",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
